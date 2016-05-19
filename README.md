@@ -6,4 +6,4 @@ Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible t
 
 #gh-pages link
 
-The link to the compiled html can be found [link](https://haiderstats.github.io/Practical-Machine-Learning-Analysis/ "here.")
+The link to the compiled html can be found [here](https://haiderstats.github.io/Practical-Machine-Learning-Analysis/)
