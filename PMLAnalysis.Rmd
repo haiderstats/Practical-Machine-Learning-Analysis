@@ -1,0 +1,64 @@
+---
+title: "Practical Machine Learning Analysis"
+author: "Humza Haider"
+date: "May 18, 2016"
+output: html_document
+---
+#Introduction
+
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset).
+
+#Data Preperation
+
+##Load the data.
+```{r}
+library(caret)
+library(doParallel)
+set.seed(123)
+train = read.csv("~/Downloads/pml-training.csv")
+test = read.csv("~/Downloads/pml-testing.csv")
+```
+
+
+##Data Cleaning
+I will need to remove some variables; since I am interested in using random forests we will need to remove the columns (variables) that contain missing values since random forests do not handle missing data. Additionally, we will remove those variables that do not particularly help with the analysis, such as time stamps.
+
+```{r}
+#training set
+train[ train == ''] = NA
+train[train == '#DIV/0!'] = NA
+train = train[,colSums(is.na(train)) == 0]
+toRemove = c("X","raw_timestamp_part_1","raw_timestamp_part_2","cvtd_timestamp","user_name", "new_window","num_window")
+train = train[ !names(train) %in% toRemove]
+dim(train)
+
+#testing set
+
+test[ test == ''] = NA
+test[test == '#DIV/0!'] = NA
+test = test[,colSums(is.na(test)) == 0]
+toRemove = c("X","raw_timestamp_part_1","raw_timestamp_part_2","cvtd_timestamp","user_name", "new_window","num_window")
+test = test[ !names(test) %in% toRemove]
+dim(test)
+```
+
+
+#Data Analysis
+Random foresting is a strong, robust technique which will select our variables for us. We have removed all NA values so we should not run into any
+errors with the method. We will apply a 10-fold cross validation in addition to reduce out of sample error. Since we are choosing to do cross validation we do not need to create a validation set, and instead can take the average of our 10-fold cross validation and compute the accuracy and thus the estimated out of sample error.  Additionally we will allow parallel computing so that our computation is completed faster.
+
+```{r}
+registerDoParallel(cores = 4)
+rfControl= trainControl(method = "cv", number = 10, allowParallel = T)
+model = train(classe ~ ., data = train, method = "rf", trControl = rfControl)
+confusionMatrix(model)
+```
+
+From the Confusion Matrix output we can see our accuracy is $0.9956$ or $(99.56%)$. We can calculate our out-of-sample error to be $1 - 0.9956 = 0.0044$ or $0.44%$. This is a low error rate and we should expect to see good results from the following model.
+
+#Predict the Test Cases
+
+```{r}
+predict(model, test)
+```
+
