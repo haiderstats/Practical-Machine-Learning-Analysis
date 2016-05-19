@@ -115,14 +115,6 @@ dim(test)</code></pre>
 <pre class="r"><code>registerDoParallel(cores = 4)
 rfControl= trainControl(method = &quot;cv&quot;, number = 10, allowParallel = T)
 model = train(classe ~ ., data = train, method = &quot;rf&quot;, trControl = rfControl)</code></pre>
-<pre><code>## Loading required package: randomForest</code></pre>
-<pre><code>## randomForest 4.6-12</code></pre>
-<pre><code>## Type rfNews() to see new features/changes/bug fixes.</code></pre>
-<pre><code>## 
-## Attaching package: 'randomForest'</code></pre>
-<pre><code>## The following object is masked from 'package:ggplot2':
-## 
-##     margin</code></pre>
 <pre class="r"><code>confusionMatrix(model)</code></pre>
 <pre><code>## Cross-Validated (10 fold) Confusion Matrix 
 ## 
@@ -137,7 +129,7 @@ model = train(classe ~ ., data = train, method = &quot;rf&quot;, trControl = rfC
 ##          E  0.0  0.0  0.0  0.0 18.3
 ##                             
 ##  Accuracy (average) : 0.9956</code></pre>
-<p>From the Confusion Matrix output we can see our accuracy is <span class="math">\(0.9956\)</span> or <span class="math">\((99.56%)\)</span>. We can calculate our out-of-sample error to be <span class="math">\(1 - 0.9956 = 0.0044\)</span> or <span class="math">\(0.44%\)</span>. This is a low error rate and we should expect to see good results from the following model.</p>
+<p>From the Confusion Matrix output we can see our accuracy is <span class="math">\(0.9956\)</span> or <span class="math">\((99.56\%)\)</span>. We can calculate our out-of-sample error to be <span class="math">\(1 - 0.9956 = 0.0044\)</span> or <span class="math">\(0.44\%\)</span>. This is a low error rate and we should expect to see good results from the following model.</p>
 </div>
 <div id="predict-the-test-cases" class="section level1">
 <h1>Predict the Test Cases</h1>
